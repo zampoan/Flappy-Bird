@@ -16,7 +16,8 @@ def main():
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     playerSprites = pygame.sprite.Group()
-    environmentSprites = pygame.sprite.Group()
+    environmentSprites = pygame.sprite.LayeredUpdates()
+    hitboxSprites = pygame.sprite.Group()            
     uiSprites = pygame.sprite.Group()
 
     # Sprite Activity
@@ -40,34 +41,42 @@ def main():
                 for s in playerSprites: 
                     s.jump = True
         
-        # Adds pipe into game
+        # Adds pipe and hitboxes into game
         if len(environmentSprites) < 5:
             pipePosYsetA = random.randint(200, 400)
             pipePosYsetB = random.randint(200, 400)
+
             pipe1 = Pipe(SCREEN_WIDTH + PIPE_WIDTH, pipePosYsetA)
             pipe2 = Pipe(SCREEN_WIDTH + PIPE_WIDTH, pipePosYsetA - 450, True)
             pipe3 = Pipe(SCREEN_WIDTH + PIPE_WIDTH + PIPE_SPACING, pipePosYsetB)
             pipe4 = Pipe(SCREEN_WIDTH + PIPE_WIDTH + PIPE_SPACING, pipePosYsetB - 450, True)
-            environmentSprites.add(pipe1, pipe2, pipe3, pipe4, ground)
-            
-        
+            environmentSprites.add(pipe1, pipe2, pipe3, pipe4, layer=0)
+            environmentSprites.add(ground, layer=1)
+
+            gap1 = Gap(SCREEN_WIDTH + PIPE_WIDTH, pipePosYsetA)
+            gap2 = Gap(SCREEN_WIDTH + PIPE_WIDTH + PIPE_SPACING, pipePosYsetB)
+            hitboxSprites.add(gap1, gap2)
+
         screen.blit(BACKGROUND_IMAGE, (0,0))
 
-        # Player and Environment Sprite updates
+        # Sprite updates
         playerSprites.update()
         environmentSprites.update()
+        hitboxSprites.update()
         playerSprites.draw(screen)
         environmentSprites.draw(screen)
+        # hitboxSprites.draw(screen)                    # We want this invisible so we don't draw
 
-        # UI Sprites
         uiSprites.update()
         uiSprites.draw(screen)
 
-        # Collision
-        for bird in playerSprites:
-            if pygame.sprite.spritecollide(bird, environmentSprites, False):
-                # running = False
-                pass
+        # When player hits pipe or ground, return to menu
+        if pygame.sprite.spritecollide(bird, environmentSprites, False):
+            running = False
+
+        # When player enters scoring area, increase the score
+        if pygame.sprite.spritecollide(bird, hitboxSprites, True):
+            score.increaseScore()
 
         pygame.display.flip()
 

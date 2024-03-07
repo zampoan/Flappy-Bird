@@ -18,12 +18,19 @@ class Score(pygame.sprite.Sprite):
             pygame.image.load("sprites/9.png")
         ]
         self.score = 0
+        self.scoreIdx = 0
 
-        self.image = self.sprites[self.score]
+        self.image = self.sprites[self.scoreIdx]
         self.rect = self.image.get_rect()
         self.rect.center = SCORE_START_POS
 
-    def update(self):
+    def increaseScore(self):
+        self.score += 1
+        self.scoreIdx += 1
+        
+        # Double digits
+        if self.score > 9:
+            self.scoreIdx = 1
 
-        if self.score < 10:
-            pass
+        self.image = self.sprites[self.scoreIdx]
+       

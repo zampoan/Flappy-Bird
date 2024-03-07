@@ -1,7 +1,7 @@
 import pygame
-from ui import Score
 
 JUMP_HEIGHT = 20
+PIPE_WIDTH = 52
 BIRD_START_POS = (72, 100)
 GROUND_IMAGE = pygame.image.load("sprites/base.png")   
 PIPE_IMAGE = pygame.image.load("sprites/pipe-green.png")
@@ -100,14 +100,14 @@ class Pipe(pygame.sprite.Sprite):
             self.image = PIPE_IMAGE
 
         # Kill when it gets off screen
-        if self.rect.x < -52:
+        if self.rect.x < -PIPE_WIDTH:
             self.kill()
 
 
 class Gap(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__()
-        self.image = pygame.Surface((300,300))
+        self.image = pygame.Surface((PIPE_WIDTH, 150))
         self.image.fill('red')
         self.rect = self.image.get_rect()
         self.rect.bottomleft = (x, y)
@@ -117,6 +117,6 @@ class Gap(pygame.sprite.Sprite):
     def update(self):
         self.rect.x -= self.speed
 
-        if self.rect.x < -52:
+        if self.rect.x < -PIPE_WIDTH:
             self.kill()
 
