@@ -4,7 +4,6 @@ from entities import Bird, Pipe, Ground
 SCREEN_WIDTH = 288
 SCREEN_HEIGHT = 512
 BACKGROUND_IMAGE = pygame.image.load("sprites/background-day.png")
-GROUND_IMAGE = pygame.image.load("sprites/base.png")   
 
 def main():
     pygame.init()
@@ -17,9 +16,11 @@ def main():
 
     # Sprite Activity
     bird = Bird()
-    ground = Ground(GROUND_IMAGE, 0, 400)
+    ground = Ground()
+    pipe1 = Pipe(100, 350)
+    pipe2 = Pipe(100, -100, True)
     playerSprites.add(bird)
-    environmentSprites.add(ground)
+    environmentSprites.add(pipe1, pipe2, ground)
 
     running = True
 
@@ -38,6 +39,7 @@ def main():
 
         screen.blit(BACKGROUND_IMAGE, (0,0))
 
+        # Sprite updates
         playerSprites.update()
         environmentSprites.update()
         playerSprites.draw(screen)
@@ -46,10 +48,10 @@ def main():
         # Collision
         for bird in playerSprites:
             if pygame.sprite.spritecollide(bird, environmentSprites, False):
-                print('HIT!')
+                pass
             else:
-                print('NO HIT!')
-
+                pass
+        print(environmentSprites)
 
         pygame.display.flip()
 
