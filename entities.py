@@ -1,7 +1,8 @@
 import pygame
+from ui import Score
 
 JUMP_HEIGHT = 20
-BIRD_START_POS = (72, 100) 
+BIRD_START_POS = (72, 100)
 GROUND_IMAGE = pygame.image.load("sprites/base.png")   
 PIPE_IMAGE = pygame.image.load("sprites/pipe-green.png")
 
@@ -72,7 +73,7 @@ class Ground(pygame.sprite.Sprite):
 
 class Pipe(pygame.sprite.Sprite):
     """
-    How does Pipe Work: 
+    How Pipe Works: 
         - Always max four on screen, two miniumum
         - Have 450 pixels difference
     """
@@ -81,14 +82,41 @@ class Pipe(pygame.sprite.Sprite):
         self.image = PIPE_IMAGE
         self.invertedImage = pygame.transform.flip(self.image, False, True)
         self.rect = self.image.get_rect()
+        
+        self.speed = 5
 
         self.rect.topleft = (x, y)
 
         self.inverted = inverted
 
+
     def update(self):
-        self.rect.x -= 1
+        self.rect.x -= self.speed
+
+        # Invert the image
         if self.inverted:
             self.image = self.invertedImage
         else:
             self.image = PIPE_IMAGE
+
+        # Kill when it gets off screen
+        if self.rect.x < -52:
+            self.kill()
+
+
+class Gap(pygame.sprite.Sprite):
+    def __init__(self, x, y):
+        super().__init__()
+        self.image = pygame.Surface((300,300))
+        self.image.fill('red')
+        self.rect = self.image.get_rect()
+        self.rect.bottomleft = (x, y)
+
+        self.speed = 5
+
+    def update(self):
+        self.rect.x -= self.speed
+
+        if self.rect.x < -52:
+            self.kill()
+
