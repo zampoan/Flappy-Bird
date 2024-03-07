@@ -1,18 +1,10 @@
 import pygame
-from entities import Bird, Pipe
+from entities import Bird, Pipe, Ground
 
 SCREEN_WIDTH = 288
 SCREEN_HEIGHT = 512
-BIRD_IMAGE = pygame.image.load("sprites/bluebird-downflap.png")
 BACKGROUND_IMAGE = pygame.image.load("sprites/background-day.png")
-BIRD_START_POS = (100, 100)
-
-
-def doSprites(sprites):
-    """
-    Contains all relevant information all sprites
-    """
-    sprites.add(Bird(BIRD_IMAGE, BIRD_START_POS))
+GROUND_IMAGE = pygame.image.load("sprites/base.png")   
 
 def main():
     pygame.init()
@@ -20,9 +12,14 @@ def main():
     clock = pygame.time.Clock()
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    sprites = pygame.sprite.Group()
+    playerSprites = pygame.sprite.Group()
+    environmentSprites = pygame.sprite.Group()
 
-    doSprites(sprites)
+    # Sprite Activity
+    bird = Bird()
+    ground = Ground(GROUND_IMAGE, 0, 400)
+    playerSprites.add(bird)
+    environmentSprites.add(ground)
 
     running = True
 
@@ -33,15 +30,26 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
 
+            # Jumping
             if event.type == pygame.KEYDOWN and pygame.K_SPACE:
-                for s in sprites:
+                for s in playerSprites: 
                     s.jump = True
 
 
         screen.blit(BACKGROUND_IMAGE, (0,0))
 
-        sprites.update()
-        sprites.draw(screen)
+        playerSprites.update()
+        environmentSprites.update()
+        playerSprites.draw(screen)
+        environmentSprites.draw(screen)
+
+        # Collision
+        for bird in playerSprites:
+            if pygame.sprite.spritecollide(bird, environmentSprites, False):
+                print('HIT!')
+            else:
+                print('NO HIT!')
+
 
         pygame.display.flip()
 
