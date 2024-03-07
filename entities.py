@@ -1,20 +1,38 @@
 import pygame
+import random
 
 JUMP_HEIGHT = 20
 PIPE_WIDTH = 52
 BIRD_START_POS = (72, 100)
 GROUND_IMAGE = pygame.image.load("sprites/base.png")   
-PIPE_IMAGE = pygame.image.load("sprites/pipe-green.png")
+PIPE_IMAGE = random.choice([
+    pygame.image.load("sprites/pipe-green.png"),
+    pygame.image.load("sprites/pipe-red.png")
+                            ])
 
 class Bird(pygame.sprite.Sprite):
     def __init__(self) -> None:
         super().__init__()
 
-        self.sprites = [
-                        pygame.image.load("sprites/bluebird-downflap.png"),
-                        pygame.image.load("sprites/bluebird-midflap.png"),
-                        pygame.image.load("sprites/bluebird-upflap.png")
+        self.randomSpriteList = [
+                            [
+                                pygame.image.load("sprites/bluebird-downflap.png"),
+                                pygame.image.load("sprites/bluebird-midflap.png"),
+                                pygame.image.load("sprites/bluebird-upflap.png")
+                            ],
+                            [
+                                pygame.image.load("sprites/redbird-downflap.png"),
+                                pygame.image.load("sprites/redbird-midflap.png"),
+                                pygame.image.load("sprites/redbird-upflap.png")
+                            ],
+                            [
+                                pygame.image.load("sprites/yellowbird-downflap.png"),
+                                pygame.image.load("sprites/yellowbird-midflap.png"),
+                                pygame.image.load("sprites/yellowbird-upflap.png")
+                            ]
                         ]
+
+        self.sprites = random.choice(self.randomSpriteList)
         self.currentSprite = 0
     
         self.originalImage = self.sprites[self.currentSprite]

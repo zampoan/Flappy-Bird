@@ -6,15 +6,33 @@ from entities import Bird, Pipe, Ground, Gap
 SCREEN_WIDTH = 288
 SCREEN_HEIGHT = 512
 PIPE_WIDTH = 52
-PIPE_SPACING = 190
-BACKGROUND_IMAGE = pygame.image.load("sprites/background-day.png")
+PIPE_SPACING = 190  
+BACKGROUND_IMAGE = random.choice([
+    pygame.image.load("sprites/background-day.png"),
+    pygame.image.load("sprites/background-night.png") 
+    ])
 
-def main():
-    pygame.init()
+CONTROL_OVERLAY = pygame.image.load("sprites/message.png")
+
+def mainMenu(screen):
+    MAIN_MENU_BACKGROUND = pygame.image.load("sprites/screenshot.png").convert_alpha()
+    MAIN_MENU_BACKGROUND.set_alpha(100)
+    screen.blit(MAIN_MENU_BACKGROUND, (0,0))
+    screen.blit(CONTROL_OVERLAY, (60,100))
+    pygame.display.flip()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            elif event.type == pygame.KEYDOWN and pygame.K_SPACE:
+                return
+
+
+def main(screen):
     pygame.display.set_caption('Flappy')
     clock = pygame.time.Clock()
 
-    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     playerSprites = pygame.sprite.Group()
     environmentSprites = pygame.sprite.LayeredUpdates()
     hitboxSprites = pygame.sprite.Group()            
@@ -28,6 +46,7 @@ def main():
     uiSprites.add(score)
 
     running = True
+    
 
     while running:
         
@@ -57,6 +76,7 @@ def main():
             gap2 = Gap(SCREEN_WIDTH + PIPE_WIDTH + PIPE_SPACING, pipePosYsetB)
             hitboxSprites.add(gap1, gap2)
 
+        # Sets background image
         screen.blit(BACKGROUND_IMAGE, (0,0))
 
         # Sprite updates
@@ -87,7 +107,10 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    pygame.init()
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    mainMenu(screen)
+    main(screen)
 
 
 
